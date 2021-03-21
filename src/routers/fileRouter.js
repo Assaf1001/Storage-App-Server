@@ -54,6 +54,14 @@ router.get("/file", auth, getFileFromS3, async (req, res) => {
     res.setHeader("Content-Disposition", "attachment; filename=" + fileName);
 
     try {
+        const isUserOwnFile = req.user._id == req.query.owner;
+        if (!isUserOwnFile) {
+            res.status(400).send({
+                status: 400,
+                message: "Cannot download",
+            });
+        }
+
         stream.pipe(res);
     } catch (err) {
         res.status(500).send(err);

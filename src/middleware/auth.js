@@ -2,7 +2,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/userModel");
 
 const auth = async (req, res, next) => {
-    console.log(req.query);
     try {
         const token = req.query.token
             ? req.query.token
