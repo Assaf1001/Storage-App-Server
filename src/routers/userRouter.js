@@ -6,6 +6,10 @@ const router = new express.Router();
 
 //// Login & Logout ////
 
+router.get("/test", (req, res) => {
+    res.send("ok");
+});
+
 // SignUp
 router.post("/users/signup", async (req, res) => {
     const user = new User(req.body);
