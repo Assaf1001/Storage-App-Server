@@ -41,6 +41,13 @@ const userSchema = new mongoose.Schema(
     }
 );
 
+// Virual field
+userSchema.virtual("files", {
+    ref: "File",
+    localField: "_id",
+    foreignField: "owner",
+});
+
 // Hash the Password before saving
 userSchema.pre("save", async function (next) {
     const user = this;
