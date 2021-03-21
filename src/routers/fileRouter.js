@@ -13,7 +13,7 @@ const router = new express.Router();
 router.post("/files", auth, uploadFileToS3, async (req, res) => {
     try {
         if (!req.file) {
-            return res.status(422).send({
+            res.status(422).send({
                 status: 422,
                 message: "File not uploaded",
             });
@@ -51,7 +51,12 @@ router.get("/files", auth, async (req, res) => {
 router.get("/file", auth, getFileFromS3, async (req, res) => {
     const fileName = req.query.name;
     const stream = Readable.from(req.fileBuffer);
-    res.setHeader("Content-Disposition", "attachment; filename=" + fileName);
+    if (req.query.download)
+        res.setHeader(
+            "Content-Disposition",
+            "attachment; filename=" + fileName
+        );
+    else res.setHeader("Content-Disposition", "inline; filename=" + fileName);
 
     try {
         const isUserOwnFile = req.user._id == req.query.owner;

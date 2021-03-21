@@ -8,12 +8,16 @@ const fileStorage = multerS3({
     s3,
     acl: "private",
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    contentDisposition: "attachment",
+    contentDisposition: "inline",
     bucket: process.env.S3_BUCKET,
     metadata: (req, file, cb) => {
         cb(null, { fieldName: file.fieldname });
     },
     key: (req, file, cb) => {
+        const validFileTypes = /\.(jpeg|txt|pdf)$/;
+        if (!validFileTypes.test(file.originalname)) {
+            cb("File type not supported");
+        }
         const fileName = `${req.user.email}/${new Date().getTime()}-${
             file.originalname
         }`;
